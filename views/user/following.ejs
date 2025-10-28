@@ -1,0 +1,174 @@
+<%- include('../layout', { 
+    title: title,
+    page: page,
+    body: `
+        <div class="following-page">
+            <div class="container">
+                
+                <div class="page-header">
+                    <h1>
+                        <a href="/user/${profileUser.username}" class="back-link">
+                            <i class="fas fa-arrow-left"></i>
+                        </a>
+                        @${profileUser.username} sigue a
+                    </h1>
+                </div>
+                
+                ${following.length > 0 ? `
+                    <div class="users-grid">
+                        ${following.map(followedUser => `
+                            <div class="user-card">
+                                <a href="/user/${followedUser.username}">
+                                    <img src="${followedUser.avatar}" alt="${followedUser.username}" class="user-avatar">
+                                </a>
+                                <div class="user-info">
+                                    <a href="/user/${followedUser.username}" class="user-name">
+                                        ${followedUser.firstName && followedUser.lastName 
+                                            ? followedUser.firstName + ' ' + followedUser.lastName 
+                                            : followedUser.username}
+                                    </a>
+                                    <p class="user-username">@${followedUser.username}</p>
+                                    ${followedUser.bio ? `<p class="user-bio">${followedUser.bio}</p>` : ''}
+                                </div>
+                                ${isAuthenticated && user.id !== followedUser.id ? `
+                                    <button class="btn btn-outline btn-sm follow-btn" data-user-id="${followedUser.id}">
+                                        <i class="fas fa-user-check"></i> Siguiendo
+                                    </button>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : `
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <h3>No sigue a nadie aún</h3>
+                        <p>${profileUser.username === (user ? user.username : '') 
+                            ? 'Comienza a seguir usuarios para ver sus recetas en tu feed' 
+                            : 'Este usuario aún no sigue a nadie'}</p>
+                        ${profileUser.username === (user ? user.username : '') ? `
+                            <a href="/explore" class="btn btn-primary">
+                                <i class="fas fa-compass"></i> Descubrir Usuarios
+                            </a>
+                        ` : ''}
+                    </div>
+                `}
+                
+            </div>
+        </div>
+    `
+}) %>
+
+<style>
+.following-page {
+    padding: 2rem 0;
+}
+
+.page-header {
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text-primary);
+}
+
+.back-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--bg-secondary);
+    border-radius: 50%;
+    color: var(--text-primary);
+    transition: background 0.3s ease;
+}
+
+.back-link:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.users-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.user-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.user-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.user-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-info {
+    flex: 1;
+}
+
+.user-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.user-name:hover {
+    color: var(--primary);
+}
+
+.user-username {
+    color: var(--text-secondary);
+    margin: 0.25rem 0;
+}
+
+.user-bio {
+    color: var(--text-secondary);
+    margin: 0.5rem 0 0 0;
+    font-size: 0.875rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .user-card {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+</style>

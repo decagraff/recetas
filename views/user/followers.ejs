@@ -1,0 +1,168 @@
+<%- include('../layout', { 
+    title: title,
+    page: page,
+    body: `
+        <div class="followers-page">
+            <div class="container">
+                
+                <div class="page-header">
+                    <h1>
+                        <a href="/user/${profileUser.username}" class="back-link">
+                            <i class="fas fa-arrow-left"></i>
+                        </a>
+                        Seguidores de @${profileUser.username}
+                    </h1>
+                </div>
+                
+                ${followers.length > 0 ? `
+                    <div class="users-grid">
+                        ${followers.map(follower => `
+                            <div class="user-card">
+                                <a href="/user/${follower.username}">
+                                    <img src="${follower.avatar}" alt="${follower.username}" class="user-avatar">
+                                </a>
+                                <div class="user-info">
+                                    <a href="/user/${follower.username}" class="user-name">
+                                        ${follower.firstName && follower.lastName 
+                                            ? follower.firstName + ' ' + follower.lastName 
+                                            : follower.username}
+                                    </a>
+                                    <p class="user-username">@${follower.username}</p>
+                                    ${follower.bio ? `<p class="user-bio">${follower.bio}</p>` : ''}
+                                </div>
+                                ${isAuthenticated && user.id !== follower.id ? `
+                                    <button class="btn btn-primary btn-sm follow-btn" data-user-id="${follower.id}">
+                                        <i class="fas fa-user-plus"></i> Seguir
+                                    </button>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : `
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <h3>No hay seguidores aún</h3>
+                        <p>${profileUser.username === (user ? user.username : '') 
+                            ? 'Cuando otros usuarios te sigan, aparecerán aquí' 
+                            : 'Este usuario aún no tiene seguidores'}</p>
+                    </div>
+                `}
+                
+            </div>
+        </div>
+    `
+}) %>
+
+<style>
+.followers-page {
+    padding: 2rem 0;
+}
+
+.page-header {
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text-primary);
+}
+
+.back-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--bg-secondary);
+    border-radius: 50%;
+    color: var(--text-primary);
+    transition: background 0.3s ease;
+}
+
+.back-link:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.users-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.user-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.user-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.user-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-info {
+    flex: 1;
+}
+
+.user-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.user-name:hover {
+    color: var(--primary);
+}
+
+.user-username {
+    color: var(--text-secondary);
+    margin: 0.25rem 0;
+}
+
+.user-bio {
+    color: var(--text-secondary);
+    margin: 0.5rem 0 0 0;
+    font-size: 0.875rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+    .user-card {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+</style>

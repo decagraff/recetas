@@ -1,0 +1,61 @@
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            
+            <div class="footer-section">
+                <h3><%= appConfig.name %></h3>
+                <p><%= appConfig.description %></p>
+                <div class="footer-social">
+                    <a href="#" target="_blank" aria-label="Facebook">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="#" target="_blank" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" target="_blank" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" target="_blank" aria-label="YouTube">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Explorar</h4>
+                <ul>
+                    <li><a href="/">Inicio</a></li>
+                    <li><a href="/explore">Explorar Recetas</a></li>
+                    <li><a href="/categories">Categorías</a></li>
+                    <li><a href="/trending">Trending</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Comunidad</h4>
+                <ul>
+                    <li><a href="/users">Usuarios</a></li>
+                    <li><a href="/rankings">Rankings</a></li>
+                    <li><a href="/blog">Blog</a></li>
+                    <li><a href="/about">Acerca de</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Soporte</h4>
+                <ul>
+                    <li><a href="/help">Centro de Ayuda</a></li>
+                    <li><a href="/contact">Contacto</a></li>
+                    <li><a href="/terms">Términos de Uso</a></li>
+                    <li><a href="/privacy">Privacidad</a></li>
+                </ul>
+            </div>
+            
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; <%= new Date().getFullYear() %> <%= appConfig.name %>. Todos los derechos reservados.</p>
+            <p>Hecho con <i class="fas fa-heart" style="color: var(--error);"></i> y muchas recetas</p>
+        </div>
+    </div>
+</footer>

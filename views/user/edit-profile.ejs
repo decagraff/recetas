@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> | <%= appConfig.name %></title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/theme.css">
+    <link rel="stylesheet" href="/css/components.css">
+</head>
+<body class="page-<%= page %>">
+    
+    <%- include('../partials/navbar') %>
+    
+    <main class="main-content">
+        <div class="edit-profile-page">
+            <div class="container">
+                
+                <div class="page-header">
+                    <h1><i class="fas fa-edit"></i> Editar Perfil</h1>
+                    <a href="/user/<%= profileUser.username %>" class="btn btn-outline">
+                        <i class="fas fa-arrow-left"></i> Volver al Perfil
+                    </a>
+                </div>
+                
+                <% if (success) { %>
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i>
+                        <span>¡Perfil actualizado exitosamente!</span>
+                    </div>
+                <% } %>
+                
+                <% if (errors.length > 0) { %>
+                    <div class="alert alert-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <ul>
+                            <% errors.forEach(function(err) { %>
+                                <li><%= err.msg %></li>
+                            <% }); %>
+                        </ul>
+                    </div>
+                <% } %>
+                
+                <div class="edit-sections">
+                    
+                    <div class="edit-section">
+                        <h2><i class="fas fa-images"></i> Imágenes de Perfil</h2>
+                        
+                        <div class="image-uploads">
+                            <div class="upload-box">
+                                <label>Avatar</label>
+                                <div class="current-image">
+                                    <img src="<%= profileUser.avatar %>" alt="Avatar" id="avatarPreview" class="preview-avatar">
+                                    <button type="button" class="change-image-btn" onclick="document.getElementById('avatarInput').click()">
+                                        <i class="fas fa-camera"></i> Cambiar
+                                    </button>
+                                </div>
+                                <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="uploadAvatar(this)">
+                                <small class="upload-hint">Imagen cuadrada, máximo 5MB</small>
+                            </div>
+                            
+                            <div class="upload-box">
+                                <label>Portada</label>
+                                <div class="current-image cover">
+                                    <img src="<%= profileUser.coverImage || '/images/placeholders/cover.jpg' %>" alt="Cover" id="coverPreview" class="preview-cover">
+                                    <button type="button" class="change-image-btn" onclick="document.getElementById('coverInput').click()">
+                                        <i class="fas fa-camera"></i> Cambiar
+                                    </button>
+                                </div>
+                                <input type="file" id="coverInput" accept="image/*" style="display: none;" onchange="uploadCover(this)">
+                                <small class="upload-hint">1200x400px recomendado, máximo 5MB</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="edit-section">
+                        <h2><i class="fas fa-user"></i> Información Personal</h2>
+                        
+                        <form action="/user/edit" method="POST" class="edit-form">
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName"><i class="fas fa-user"></i> Nombre</label>
+                                    <input type="text" id="firstName" name="firstName" value="<%= profileUser.firstName || '' %>" placeholder="Juan">
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName"><i class="fas fa-user"></i> Apellido</label>
+                                    <input type="text" id="lastName" name="lastName" value="<%= profileUser.lastName || '' %>" placeholder="Pérez">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="bio"><i class="fas fa-align-left"></i> Biografía</label>
+                                <textarea id="bio" name="bio" rows="4" maxlength="500" placeholder="Cuéntanos sobre ti..."><%= profileUser.bio || '' %></textarea>
+                                <small class="char-count"><span id="bioCount"><%= profileUser.bio ? profileUser.bio.length : 0 %></span>/500</small>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="country"><i class="fas fa-globe"></i> País</label>
+                                    <input type="text" id="country" name="country" value="<%= profileUser.country || '' %>" placeholder="Perú">
+                                </div>
+                                <div class="form-group">
+                                    <label for="city"><i class="fas fa-map-marker-alt"></i> Ciudad</label>
+                                    <input type="text" id="city" name="city" value="<%= profileUser.city || '' %>" placeholder="Lima">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="website"><i class="fas fa-link"></i> Sitio Web</label>
+                                <input type="url" id="website" name="website" value="<%= profileUser.website || '' %>" placeholder="https://tusitio.com">
+                            </div>
+                            
+                            <h3 class="section-subtitle"><i class="fas fa-share-alt"></i> Redes Sociales</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="instagram"><i class="fab fa-instagram"></i> Instagram</label>
+                                    <div class="input-with-prefix">
+                                        <span class="prefix">@</span>
+                                        <input type="text" id="instagram" name="instagram" value="<%= profileUser.instagram || '' %>" placeholder="usuario">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="twitter"><i class="fab fa-twitter"></i> Twitter</label>
+                                    <div class="input-with-prefix">
+                                        <span class="prefix">@</span>
+                                        <input type="text" id="twitter" name="twitter" value="<%= profileUser.twitter || '' %>" placeholder="usuario">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="facebook"><i class="fab fa-facebook"></i> Facebook</label>
+                                    <input type="url" id="facebook" name="facebook" value="<%= profileUser.facebook || '' %>" placeholder="https://facebook.com/...">
+                                </div>
+                                <div class="form-group">
+                                    <label for="youtube"><i class="fab fa-youtube"></i> YouTube</label>
+                                    <input type="url" id="youtube" name="youtube" value="<%= profileUser.youtube || '' %>" placeholder="https://youtube.com/...">
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save"></i> Guardar Cambios
+                            </button>
+                        </form>
+                    </div>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </main>
+    
+    <%- include('../partials/footer') %>
+    
+    <script src="/js/main.js"></script>
+    <script src="/js/theme-toggle.js"></script>
+    
+    <style>
+    .edit-profile-page { padding: 2rem 0; }
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+    .page-header h1 { margin: 0; color: var(--text-primary); }
+    .alert { padding: 1rem; border-radius: 12px; margin-bottom: 2rem; }
+    .alert-success { background: rgba(16, 185, 129, 0.1); border: 2px solid var(--success); color: var(--success); display: flex; align-items: center; gap: 0.75rem; }
+    .alert-error { background: rgba(239, 68, 68, 0.1); border: 2px solid var(--error); color: var(--error); }
+    .alert ul { list-style: none; padding: 0; margin: 0.5rem 0 0 0; }
+    .alert li { margin: 0.25rem 0; }
+    .edit-sections { display: flex; flex-direction: column; gap: 2rem; }
+    .edit-section { background: var(--bg-secondary); padding: 2rem; border-radius: 16px; }
+    .edit-section h2 { margin: 0 0 1.5rem 0; color: var(--text-primary); display: flex; align-items: center; gap: 0.75rem; }
+    .image-uploads { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .upload-box label { display: block; font-weight: 600; margin-bottom: 1rem; color: var(--text-primary); }
+    .current-image { position: relative; border-radius: 12px; overflow: hidden; background: var(--bg-tertiary); }
+    .preview-avatar { width: 200px; height: 200px; object-fit: cover; display: block; margin: 0 auto; }
+    .preview-cover { width: 100%; height: 150px; object-fit: cover; display: block; }
+    .change-image-btn { position: absolute; bottom: 1rem; right: 1rem; padding: 0.5rem 1rem; background: rgba(0, 0, 0, 0.7); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.875rem; transition: background 0.3s ease; }
+    .change-image-btn:hover { background: rgba(0, 0, 0, 0.9); }
+    .upload-hint { display: block; margin-top: 0.5rem; color: var(--text-muted); font-size: 0.875rem; }
+    .edit-form { display: flex; flex-direction: column; gap: 1.5rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .section-subtitle { margin: 2rem 0 1rem 0; font-size: 1.25rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; }
+    .char-count { display: block; text-align: right; margin-top: 0.25rem; color: var(--text-muted); font-size: 0.875rem; }
+    .input-with-prefix { display: flex; align-items: center; border: 2px solid var(--border-color); border-radius: 8px; overflow: hidden; background: var(--bg-primary); }
+    .input-with-prefix .prefix { padding: 0 0.75rem; background: var(--bg-tertiary); color: var(--text-secondary); font-weight: 600; }
+    .input-with-prefix input { border: none; flex: 1; }
+    @media (max-width: 768px) {
+        .page-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+        .image-uploads { grid-template-columns: 1fr; }
+        .form-row { grid-template-columns: 1fr; }
+    }
+    </style>
+    
+    <script>
+    const bioTextarea = document.getElementById('bio');
+    const bioCount = document.getElementById('bioCount');
+    if (bioTextarea && bioCount) {
+        bioTextarea.addEventListener('input', function() {
+            bioCount.textContent = this.value.length;
+        });
+    }
+
+    async function uploadAvatar(input) {
+        if (!input.files || !input.files[0]) return;
+        const file = input.files[0];
+        if (file.size > 5242880) { alert('La imagen no debe superar 5MB'); return; }
+        const reader = new FileReader();
+        reader.onload = (e) => { document.getElementById('avatarPreview').src = e.target.result; };
+        reader.readAsDataURL(file);
+        const formData = new FormData();
+        formData.append('avatar', file);
+        try {
+            const response = await fetch('/user/avatar', { method: 'POST', body: formData });
+            const data = await response.json();
+            if (data.success) {
+                document.getElementById('avatarPreview').src = data.avatarUrl;
+                window.AppUtils.showToast('Avatar actualizado exitosamente', 'success');
+            } else {
+                window.AppUtils.showToast(data.error || 'Error al subir avatar', 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            window.AppUtils.showToast('Error al subir avatar', 'error');
+        }
+    }
+
+    async function uploadCover(input) {
+        if (!input.files || !input.files[0]) return;
+        const file = input.files[0];
+        if (file.size > 5242880) { alert('La imagen no debe superar 5MB'); return; }
+        const reader = new FileReader();
+        reader.onload = (e) => { document.getElementById('coverPreview').src = e.target.result; };
+        reader.readAsDataURL(file);
+        const formData = new FormData();
+        formData.append('cover', file);
+        try {
+            const response = await fetch('/user/cover', { method: 'POST', body: formData });
+            const data = await response.json();
+            if (data.success) {
+                document.getElementById('coverPreview').src = data.coverUrl;
+                window.AppUtils.showToast('Portada actualizada exitosamente', 'success');
+            } else {
+                window.AppUtils.showToast(data.error || 'Error al subir portada', 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            window.AppUtils.showToast('Error al subir portada', 'error');
+        }
+    }
+    </script>
+    
+</body>
+</html>

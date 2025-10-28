@@ -1,0 +1,169 @@
+<%- include('layout', { 
+    title: title,
+    page: page,
+    body: `
+        <div class="hero-section">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <i class="fas fa-utensils"></i>
+                        Bienvenido a ${appConfig.name}
+                    </h1>
+                    <p class="hero-subtitle">${appConfig.description}</p>
+                    
+                    <div class="hero-actions">
+                        ${isAuthenticated 
+                            ? '<a href="/recipe/create" class="btn btn-primary btn-lg"><i class="fas fa-plus-circle"></i> Crear Receta</a>'
+                            : '<a href="/auth/register" class="btn btn-primary btn-lg">Comenzar Ahora</a><a href="/auth/login" class="btn btn-outline btn-lg">Iniciar Sesión</a>'
+                        }
+                    </div>
+                    
+                    <div class="hero-features">
+                        <div class="feature-card">
+                            <i class="fas fa-book-open"></i>
+                            <h3>Comparte</h3>
+                            <p>Publica tus recetas favoritas</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-search"></i>
+                            <h3>Descubre</h3>
+                            <p>Encuentra nuevas recetas</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-users"></i>
+                            <h3>Conecta</h3>
+                            <p>Únete a la comunidad</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-heart"></i>
+                            <h3>Guarda</h3>
+                            <p>Organiza tus favoritas</p>
+                        </div>
+                    </div>
+                    
+                    <div class="setup-info">
+                        <h2><i class="fas fa-check-circle" style="color: var(--success);"></i> ¡Fase 0 Completada!</h2>
+                        <ul>
+                            <li>✅ Servidor Express configurado</li>
+                            <li>✅ MySQL conectado</li>
+                            <li>✅ EJS templates funcionando</li>
+                            <li>✅ Sistema de temas (claro/oscuro)</li>
+                            <li>✅ Sesiones configuradas</li>
+                            <li>✅ Migraciones listas</li>
+                        </ul>
+                        <p><strong>Siguiente:</strong> Fase 1 - Autenticación y Perfiles</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `
+}) %>
+
+<style>
+.hero-section {
+    min-height: calc(100vh - 140px);
+    display: flex;
+    align-items: center;
+    padding: 4rem 0;
+}
+
+.hero-content {
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.hero-title i {
+    color: var(--primary);
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 4rem;
+}
+
+.hero-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.feature-card {
+    padding: 2rem;
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-card i {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.feature-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.feature-card p {
+    color: var(--text-secondary);
+}
+
+.setup-info {
+    background: var(--bg-secondary);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 2px solid var(--primary);
+    margin-top: 2rem;
+}
+
+.setup-info h2 {
+    margin-bottom: 1rem;
+}
+
+.setup-info ul {
+    text-align: left;
+    max-width: 400px;
+    margin: 1rem auto;
+}
+
+.setup-info li {
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .hero-actions {
+        flex-direction: column;
+    }
+}
+</style>

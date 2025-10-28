@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="<%= appConfig.language || 'es' %>" data-theme="light">
+    <style>
+  /* Prevenir FOUC */
+  html {
+    visibility: hidden;
+    opacity: 0;
+  }
+  
+  html.wf-active,
+  html.wf-inactive {
+    visibility: visible;
+    opacity: 1;
+  }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="<%= appConfig.description %>">
+    <meta name="keywords" content="<%= appConfig.keywords %>">
+    <meta name="author" content="<%= appConfig.name %>">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="<%= title %> | <%= appConfig.name %>">
+    <meta property="og:description" content="<%= appConfig.description %>">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<%= appConfig.baseUrl %>">
+    
+    <title><%= title %> | <%= appConfig.name %></title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/images/favicon.ico">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+
+    <link rel="preload" href="/css/theme.css" as="style">
+    <link rel="preload" href="/css/main.css" as="style">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/theme.css">
+    <link rel="stylesheet" href="/css/components.css">
+    
+    <!-- CSS específico de página -->
+    <%- typeof styles !== 'undefined' ? styles : '' %>
+</head>
+<body class="page-<%= page %>">
+    
+    <%- include('partials/navbar') %>
+    
+    <main class="main-content">
+        <%- body %>
+    </main>
+    
+    <%- include('partials/footer') %>
+    
+    <!-- JS -->
+    <script src="/js/main.js"></script>
+    <script src="/js/theme-toggle.js"></script>
+    
+    <!-- JS específico de página -->
+    <%- typeof scripts !== 'undefined' ? scripts : '' %>
+    
+</body>
+</html>

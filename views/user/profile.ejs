@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> | <%= appConfig.name %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/theme.css">
+    <link rel="stylesheet" href="/css/components.css">
+</head>
+<body class="page-<%= page %>">
+    
+    <%- include('../partials/navbar') %>
+    
+    <main class="main-content">
+        <div class="profile-page">
+            <div class="container">
+                
+                <div class="profile-cover" style="background-image: url('<%= profileUser.coverImage || "/images/placeholders/cover.jpg" %>');">
+                    <% if (isOwnProfile) { %>
+                        <button class="edit-cover-btn" title="Cambiar portada">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                    <% } %>
+                </div>
+                
+                <div class="profile-header">
+                    <div class="profile-avatar-section">
+                        <img src="<%= profileUser.avatar %>" alt="<%= profileUser.username %>" class="profile-avatar">
+                        <% if (isOwnProfile) { %>
+                            <button class="edit-avatar-btn" title="Cambiar avatar">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        <% } %>
+                    </div>
+                    
+                    <div class="profile-info">
+                        <div class="profile-name-section">
+                            <h1 class="profile-name">
+                                <% if (profileUser.firstName && profileUser.lastName) { %>
+                                    <%= profileUser.firstName %> <%= profileUser.lastName %>
+                                <% } else { %>
+                                    <%= profileUser.username %>
+                                <% } %>
+                            </h1>
+                            <p class="profile-username">@<%= profileUser.username %></p>
+                            <% if (profileUser.role === 'verified') { %>
+                                <i class="fas fa-check-circle verified-badge" title="Usuario verificado"></i>
+                            <% } %>
+                            <% if (profileUser.role === 'admin') { %>
+                                <i class="fas fa-shield-alt admin-badge" title="Administrador"></i>
+                            <% } %>
+                        </div>
+                        
+                        <% if (profileUser.bio) { %>
+                            <p class="profile-bio"><%= profileUser.bio %></p>
+                        <% } %>
+                        
+                        <div class="profile-meta">
+                            <% if (profileUser.location || profileUser.city || profileUser.country) { %>
+                                <div class="meta-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span><%= profileUser.location || [profileUser.city, profileUser.country].filter(Boolean).join(', ') %></span>
+                                </div>
+                            <% } %>
+                            
+                            <% if (profileUser.website) { %>
+                                <div class="meta-item">
+                                    <i class="fas fa-link"></i>
+                                    <a href="<%= profileUser.website %>" target="_blank" rel="noopener"><%= profileUser.website %></a>
+                                </div>
+                            <% } %>
+                            
+                            <div class="meta-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>Miembro desde <%= new Date(profileUser.createdAt).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }) %></span>
+                            </div>
+                        </div>
+                        
+                        <% if (profileUser.instagram || profileUser.twitter || profileUser.facebook || profileUser.youtube) { %>
+                            <div class="profile-social">
+                                <% if (profileUser.instagram) { %>
+                                    <a href="https://instagram.com/<%= profileUser.instagram %>" target="_blank" rel="noopener" class="social-link">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                <% } %>
+                                <% if (profileUser.twitter) { %>
+                                    <a href="https://twitter.com/<%= profileUser.twitter %>" target="_blank" rel="noopener" class="social-link">
+                                        <i class="fab fa-twitter"></i>
+                                    </a>
+                                <% } %>
+                                <% if (profileUser.facebook) { %>
+                                    <a href="<%= profileUser.facebook %>" target="_blank" rel="noopener" class="social-link">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                <% } %>
+                                <% if (profileUser.youtube) { %>
+                                    <a href="<%= profileUser.youtube %>" target="_blank" rel="noopener" class="social-link">
+                                        <i class="fab fa-youtube"></i>
+                                    </a>
+                                <% } %>
+                            </div>
+                        <% } %>
+                    </div>
+                    
+                    <div class="profile-actions">
+                        <% if (isOwnProfile) { %>
+                            <a href="/user/edit" class="btn btn-primary">
+                                <i class="fas fa-edit"></i> Editar Perfil
+                            </a>
+                        <% } else { %>
+                            <button class="btn <%= isFollowing ? 'btn-outline' : 'btn-primary' %>" id="followBtn">
+                                <i class="fas fa-<%= isFollowing ? 'user-check' : 'user-plus' %>"></i>
+                                <%= isFollowing ? 'Siguiendo' : 'Seguir' %>
+                            </button>
+                            <% if (isAuthenticated && appConfig.messagesEnabled) { %>
+                                <a href="/messages/<%= profileUser.username %>" class="btn btn-outline">
+                                    <i class="fas fa-envelope"></i> Mensaje
+                                </a>
+                            <% } %>
+                        <% } %>
+                    </div>
+                </div>
+                
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-value"><%= profileUser.recipeCount %></span>
+                        <span class="stat-label">Recetas</span>
+                    </div>
+                    <a href="/user/<%= profileUser.username %>/followers" class="stat-item stat-link">
+                        <span class="stat-value"><%= profileUser.followerCount %></span>
+                        <span class="stat-label">Seguidores</span>
+                    </a>
+                    <a href="/user/<%= profileUser.username %>/following" class="stat-item stat-link">
+                        <span class="stat-value"><%= profileUser.followingCount %></span>
+                        <span class="stat-label">Siguiendo</span>
+                    </a>
+                </div>
+                
+                <div class="profile-tabs">
+                    <button class="tab-btn <%= activeTab === 'recipes' ? 'active' : '' %>" data-tab="recipes">
+                        <i class="fas fa-utensils"></i> Recetas
+                    </button>
+                    <% if (isOwnProfile) { %>
+                        <button class="tab-btn <%= activeTab === 'saved' ? 'active' : '' %>" data-tab="saved">
+                            <i class="fas fa-bookmark"></i> Guardadas
+                        </button>
+                    <% } %>
+                </div>
+                
+                <div class="tab-content" data-tab="recipes">
+                    <% if (recipes.length > 0) { %>
+                        <div class="recipes-grid">
+                            <!-- Aquí irán las recipe cards en Fase 2 -->
+                        </div>
+                    <% } else { %>
+                        <div class="empty-state">
+                            <i class="fas fa-utensils"></i>
+                            <h3><%= isOwnProfile ? 'Aún no has publicado recetas' : 'No hay recetas publicadas' %></h3>
+                            <p><%= isOwnProfile ? 'Comparte tu primera receta con la comunidad' : 'Este usuario aún no ha publicado recetas' %></p>
+                            <% if (isOwnProfile) { %>
+                                <a href="/recipe/create" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> Crear Receta
+                                </a>
+                            <% } %>
+                        </div>
+                    <% } %>
+                </div>
+                
+                <% if (isOwnProfile) { %>
+                    <div class="tab-content" data-tab="saved" style="display: none;">
+                        <div class="empty-state">
+                            <i class="fas fa-bookmark"></i>
+                            <h3>No has guardado recetas</h3>
+                            <p>Las recetas que guardes aparecerán aquí</p>
+                            <a href="/explore" class="btn btn-primary">
+                                <i class="fas fa-compass"></i> Explorar Recetas
+                            </a>
+                        </div>
+                    </div>
+                <% } %>
+                
+            </div>
+        </div>
+    </main>
+    
+    <%- include('../partials/footer') %>
+    
+    <script src="/js/main.js"></script>
+    <script src="/js/theme-toggle.js"></script>
+    
+    <style>
+    .profile-page { padding-bottom: 3rem; }
+    .profile-cover { height: 300px; background-color: var(--bg-tertiary); background-size: cover; background-position: center; position: relative; border-radius: 0 0 20px 20px; }
+    .edit-cover-btn { position: absolute; bottom: 1rem; right: 1rem; width: 40px; height: 40px; background: rgba(0, 0, 0, 0.6); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 1rem; transition: background 0.3s ease; }
+    .edit-cover-btn:hover { background: rgba(0, 0, 0, 0.8); }
+    .profile-header { display: grid; grid-template-columns: auto 1fr auto; gap: 2rem; align-items: start; margin-top: -60px; margin-bottom: 2rem; }
+    .profile-avatar-section { position: relative; }
+    .profile-avatar { width: 150px; height: 150px; border-radius: 50%; border: 5px solid var(--bg-primary); object-fit: cover; background: var(--bg-secondary); }
+    .edit-avatar-btn { position: absolute; bottom: 5px; right: 5px; width: 36px; height: 36px; background: var(--primary); color: white; border: 3px solid var(--bg-primary); border-radius: 50%; cursor: pointer; font-size: 0.875rem; transition: background 0.3s ease; }
+    .edit-avatar-btn:hover { background: var(--primary-dark); }
+    .profile-info { padding-top: 70px; }
+    .profile-name-section { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+    .profile-name { font-size: 2rem; margin: 0; color: var(--text-primary); }
+    .profile-username { color: var(--text-secondary); font-size: 1.125rem; margin: 0; }
+    .verified-badge { color: var(--primary); font-size: 1.5rem; }
+    .admin-badge { color: #F59E0B; font-size: 1.5rem; }
+    .profile-bio { margin: 1rem 0; color: var(--text-primary); font-size: 1.125rem; line-height: 1.6; }
+    .profile-meta { display: flex; flex-wrap: wrap; gap: 1.5rem; margin: 1rem 0; }
+    .meta-item { display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); }
+    .meta-item i { color: var(--text-muted); }
+    .meta-item a { color: var(--primary); }
+    .profile-social { display: flex; gap: 0.75rem; margin-top: 1rem; }
+    .social-link { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--bg-secondary); border-radius: 50%; color: var(--text-primary); font-size: 1.25rem; transition: all 0.3s ease; }
+    .social-link:hover { background: var(--primary); color: white; transform: translateY(-3px); }
+    .profile-actions { padding-top: 70px; display: flex; flex-direction: column; gap: 0.75rem; }
+    .profile-stats { display: flex; gap: 3rem; padding: 2rem 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); }
+    .stat-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; }
+    .stat-link:hover .stat-value { color: var(--primary); }
+    .stat-value { font-size: 2rem; font-weight: 700; color: var(--text-primary); transition: color 0.3s ease; }
+    .stat-label { color: var(--text-secondary); font-size: 0.875rem; }
+    .profile-tabs { display: flex; gap: 0.5rem; margin: 2rem 0 1rem; border-bottom: 2px solid var(--border-color); }
+    .tab-btn { padding: 1rem 1.5rem; background: none; border: none; color: var(--text-secondary); font-size: 1rem; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.3s ease; }
+    .tab-btn:hover { color: var(--text-primary); }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .tab-content { padding: 2rem 0; }
+    .empty-state { text-align: center; padding: 4rem 2rem; }
+    .empty-state i { font-size: 4rem; color: var(--text-muted); margin-bottom: 1rem; }
+    .empty-state h3 { color: var(--text-primary); margin-bottom: 0.5rem; }
+    .empty-state p { color: var(--text-secondary); margin-bottom: 2rem; }
+    @media (max-width: 768px) {
+        .profile-cover { height: 200px; }
+        .profile-header { grid-template-columns: 1fr; gap: 1rem; margin-top: -50px; }
+        .profile-avatar { width: 100px; height: 100px; }
+        .profile-info { padding-top: 0; }
+        .profile-actions { padding-top: 0; }
+        .profile-stats { gap: 1.5rem; }
+        .stat-value { font-size: 1.5rem; }
+    }
+    </style>
+    
+    <script>
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const tab = this.getAttribute('data-tab');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+            document.querySelector('.tab-content[data-tab="' + tab + '"]').style.display = 'block';
+        });
+    });
+    </script>
+    
+</body>
+</html>
